@@ -3,14 +3,14 @@
 mod main_menu;
 
 use std::path;
-use ggez::mint::Point2;
+
 use clap::Clap;
-use ggez::{graphics, Context, GameResult};
+
 use ggez::conf::{self, FullscreenType};
 use ggez::ContextBuilder;
 use ggez::event::{self};
-use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
-use ggez::event::MouseButton;
+
+
 use main_menu::MainMenu;
 
 #[derive(Clap)]

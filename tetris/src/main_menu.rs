@@ -2,12 +2,12 @@ use base::center;
 
 use ggez::graphics::{Rect};
 use ggez::mint::Point2;
-use ggez::{graphics, Context, GameResult};
-use ggez::conf::{self, FullscreenType};
-use ggez::ContextBuilder;
-use ggez::event::{self};
+use ggez::{Context, GameResult};
+
+
+
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
-use ggez::event::MouseButton;
+
 
 pub struct MainMenu {
     play_btn: Button,
@@ -44,8 +44,8 @@ impl Button {
 
     fn contains(&self, p: Point2<f32>) -> bool {
         let rect = Rect::new(
-            (self.x - self.half_text_width),
-            (self.y - self.half_text_height),
+            self.x - self.half_text_width,
+            self.y - self.half_text_height,
             self.half_text_width * 2.0,
             self.half_text_height * 2.0,
         );
@@ -56,14 +56,13 @@ impl Button {
 impl MainMenu {
     pub fn new(ctx: &mut Context) -> MainMenu {
         let fancy_font = Font::new(ctx, "/boxy.ttf").expect("boom");
+        let (x, y) = center(ctx);
 
         let text = Text::new(
             TextFragment::new("Play")
                 .font(fancy_font)
                 .scale(Scale::uniform(40.0))
         );
-
-        let (x, y) = center(ctx);
         let play_btn = Button::new(ctx, text, x, y);
 
 
@@ -72,14 +71,14 @@ impl MainMenu {
                 .font(fancy_font)
                 .scale(Scale::uniform(40.0))
         );
-        let (x, y) = center(ctx);
         let quit_btn = Button::new(ctx, text, x, y + 100.0);
+
         MainMenu { play_btn, quit_btn }
     }
 }
 
 impl base::Scene for MainMenu {
-    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
         Ok(())
     }
 
@@ -90,7 +89,7 @@ impl base::Scene for MainMenu {
         Ok(())
     }
 
-    fn mouse_motion_event(&mut self, _ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
+    fn mouse_motion_event(&mut self, _ctx: &mut Context, _x: f32, _y: f32, _xrel: f32, _yrel: f32) {
 
     }
 }
