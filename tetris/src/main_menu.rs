@@ -1,4 +1,5 @@
 use base::center;
+use std::rc::Rc;
 
 use ggez::graphics::{Rect};
 use ggez::mint::Point2;
@@ -10,11 +11,13 @@ use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
 
 pub struct MainMenu {
-    play_btn: Button,
-    quit_btn: Button
+    cursor_state: CursorState,
+    play_btn: Rc<Button>,
+    quit_btn: Rc<Button>
 }
 
 pub struct Button {
+    id: i64,
     text: Text,
     half_text_width: f32,
     half_text_height: f32,
@@ -22,15 +25,23 @@ pub struct Button {
     y: f32
 }
 
+impl PartialEq for Button {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
 impl Button {
     fn new(ctx: &mut Context, text: Text, x: f32, y: f32) -> Self {
         let half_text_width = text.width(ctx) as f32 / 2.0;
         let half_text_height = text.height(ctx) as f32 / 2.0;
 
-        Self { text, half_text_width, half_text_height, x, y }
+        let id = base::next_id();
+
+        Self { id, text, half_text_width, half_text_height, x, y }
     }
 
-    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
+    fn draw(&self, ctx: &mut Context) -> GameResult<()> {
         draw(
             ctx,
             &self.text,
@@ -63,7 +74,7 @@ impl MainMenu {
                 .font(fancy_font)
                 .scale(Scale::uniform(40.0))
         );
-        let play_btn = Button::new(ctx, text, x, y);
+        let play_btn = Rc::new(Button::new(ctx, text, x, y));
 
 
         let text = Text::new(
@@ -71,10 +82,21 @@ impl MainMenu {
                 .font(fancy_font)
                 .scale(Scale::uniform(40.0))
         );
-        let quit_btn = Button::new(ctx, text, x, y + 100.0);
+        let quit_btn = Rc::new(Button::new(ctx, text, x, y + 100.0));
 
-        MainMenu { play_btn, quit_btn }
+        MainMenu {
+            cursor_state: CursorState::Idle,
+            play_btn,
+            quit_btn
+        }
     }
+}
+
+#[derive(PartialEq)]
+enum CursorState {
+    Idle,
+    Hovering(Rc<Button>),
+    MouseDown(Rc<Button>)
 }
 
 impl base::Scene for MainMenu {
@@ -83,13 +105,25 @@ impl base::Scene for MainMenu {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        self.play_btn.draw(ctx)?;
-        self.quit_btn.draw(ctx)?;
+        // self.play_btn.draw(ctx)?;
+        // self.quit_btn.draw(ctx)?;
+
+        if let CursorState::Hovering(btn) = &self.cursor_state {
+            btn.draw(ctx)?;
+        }
 
         Ok(())
     }
 
-    fn mouse_motion_event(&mut self, _ctx: &mut Context, _x: f32, _y: f32, _xrel: f32, _yrel: f32) {
+    fn mouse_motion_event(&mut self, _ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
+        let point = Point2 { x, y };
 
+        if self.play_btn.contains(point) {
+            self.cursor_state = CursorState::Hovering(self.play_btn.clone());
+        } else if self.quit_btn.contains(point) {
+            self.cursor_state = CursorState::Hovering(self.quit_btn.clone());
+        } else {
+            self.cursor_state = CursorState::Idle;
+        }
     }
 }
