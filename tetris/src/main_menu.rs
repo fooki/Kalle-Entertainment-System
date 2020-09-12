@@ -1,7 +1,7 @@
 use base::center;
 use std::rc::Rc;
 
-use ggez::graphics::{Rect};
+use ggez::graphics::{Rect, Color};
 use ggez::mint::Point2;
 use ggez::{Context, GameResult};
 
@@ -41,15 +41,14 @@ impl Button {
         Self { id, text, half_text_width, half_text_height, x, y }
     }
 
-    fn draw(&self, ctx: &mut Context) -> GameResult<()> {
+    fn draw(&self, ctx: &mut Context, params: DrawParam) -> GameResult<()> {
         draw(
             ctx,
             &self.text,
-            DrawParam::new()
-                .dest(Point2 {
-                    x: (self.x - self.half_text_width),
-                    y: (self.y - self.half_text_height)
-                })
+            params.dest(Point2 {
+                x: (self.x - self.half_text_width),
+                y: (self.y - self.half_text_height)
+            })
         )
     }
 
@@ -105,17 +104,30 @@ impl base::Scene for MainMenu {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        // self.play_btn.draw(ctx)?;
-        // self.quit_btn.draw(ctx)?;
+        let base_params = DrawParam::new();
 
-        if let CursorState::Hovering(btn) = &self.cursor_state {
-            btn.draw(ctx)?;
-        }
+        let mut play_hover = self.cursor_state == CursorState::Hovering(self.play_btn.clone());
+        let mut quit_hover = self.cursor_state == CursorState::Hovering(self.quit_btn.clone());
+
+        let play_draw_params = if play_hover {
+            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
+        } else {
+            base_params.color(Color::new(1.0, 1.0, 1.0, 1.0))
+        };
+
+        let quit_draw_params = if quit_hover {
+            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
+        } else {
+            base_params.color(Color::new(1.0, 1.0, 1.0, 1.0))
+        };
+
+        self.play_btn.draw(ctx, play_draw_params)?;
+        self.quit_btn.draw(ctx, quit_draw_params)?;
 
         Ok(())
     }
 
-    fn mouse_motion_event(&mut self, _ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
+    fn mouse_motion_event(&mut self, ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
         let point = Point2 { x, y };
 
         if self.play_btn.contains(point) {
