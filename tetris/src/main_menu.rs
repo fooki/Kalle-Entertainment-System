@@ -41,7 +41,7 @@ impl Button {
         Self { id, text, half_text_width, half_text_height, x, y }
     }
 
-    fn draw(&self, ctx: &mut Context, params: DrawParam) -> GameResult<()> {
+    fn draw(&self, ctx: &mut Context, params: &DrawParam) -> GameResult<()> {
         draw(
             ctx,
             &self.text,
@@ -104,25 +104,27 @@ impl base::Scene for MainMenu {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        let base_params = DrawParam::new();
+        let base_params = DrawParam::new().color(Color::new(1.0, 1.0, 1.0, 1.0));
 
-        let mut play_hover = self.cursor_state == CursorState::Hovering(self.play_btn.clone());
-        let mut quit_hover = self.cursor_state == CursorState::Hovering(self.quit_btn.clone());
+        let play_hover =
+            self.cursor_state == CursorState::Hovering(self.play_btn.clone());
+        let quit_hover =
+            self.cursor_state == CursorState::Hovering(self.quit_btn.clone());
 
         let play_draw_params = if play_hover {
             base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
         } else {
-            base_params.color(Color::new(1.0, 1.0, 1.0, 1.0))
+            base_params
         };
 
         let quit_draw_params = if quit_hover {
             base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
         } else {
-            base_params.color(Color::new(1.0, 1.0, 1.0, 1.0))
+            base_params
         };
 
-        self.play_btn.draw(ctx, play_draw_params)?;
-        self.quit_btn.draw(ctx, quit_draw_params)?;
+        self.play_btn.draw(ctx, &play_draw_params)?;
+        self.quit_btn.draw(ctx, &quit_draw_params)?;
 
         Ok(())
     }
