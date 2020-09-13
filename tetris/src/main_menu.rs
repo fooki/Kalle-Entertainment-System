@@ -4,8 +4,7 @@ use std::rc::Rc;
 use ggez::graphics::{Rect, Color};
 use ggez::mint::Point2;
 use ggez::{Context, GameResult};
-
-
+use ggez::event::{MouseButton, quit};
 
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
@@ -99,7 +98,14 @@ enum CursorState {
 }
 
 impl base::Scene for MainMenu {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
+    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+        if let CursorState::MouseDown(btn) = &self.cursor_state {
+            if btn.id == self.quit_btn.id {
+                quit(ctx);
+            }
+        }
+
+        scene_manager.push(Scene:new())
         Ok(())
     }
 
@@ -129,6 +135,16 @@ impl base::Scene for MainMenu {
         Ok(())
     }
 
+    fn mouse_button_down_event(&mut self, _ctx: &mut Context, _btn: MouseButton, x: f32, y: f32) {
+        let point = Point2 { x, y };
+
+        if self.play_btn.contains(point) {
+            self.cursor_state = CursorState::MouseDown(self.play_btn.clone());
+        } else if self.quit_btn.contains(point) {
+            self.cursor_state = CursorState::MouseDown(self.quit_btn.clone());
+        }
+    }
+
     fn mouse_motion_event(&mut self, ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
         let point = Point2 { x, y };
 
@@ -139,5 +155,9 @@ impl base::Scene for MainMenu {
         } else {
             self.cursor_state = CursorState::Idle;
         }
+    }
+
+    fn mouse_button_up_event(&mut self, _ctx: &mut Context, _btn: MouseButton, _x: f32, _y: f32) {
+        self.cursor_state = CursorState::Idle;
     }
 }
