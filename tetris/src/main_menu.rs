@@ -1,13 +1,15 @@
 use base::center;
+use base::SceneUpdate;
 use std::rc::Rc;
 
 use ggez::graphics::{Rect, Color};
 use ggez::mint::Point2;
 use ggez::{Context, GameResult};
-use ggez::event::{MouseButton, quit};
+use ggez::event::{MouseButton};
 
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
+use crate::tetris_game::TetrisGame;
 
 pub struct MainMenu {
     cursor_state: CursorState,
@@ -98,15 +100,18 @@ enum CursorState {
 }
 
 impl base::Scene for MainMenu {
-    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+    fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
         if let CursorState::MouseDown(btn) = &self.cursor_state {
             if btn.id == self.quit_btn.id {
-                quit(ctx);
+                return Ok(SceneUpdate::Quit);
+            }
+
+            if btn.id == self.play_btn.id {
+                return Ok(SceneUpdate::Change(Box::new(TetrisGame::new(ctx))));
             }
         }
 
-        scene_manager.push(Scene:new())
-        Ok(())
+        Ok(SceneUpdate::Nothing)
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {

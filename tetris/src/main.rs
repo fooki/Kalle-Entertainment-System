@@ -1,6 +1,7 @@
 #[macro_use] extern crate log;
 
 mod main_menu;
+mod tetris_game;
 
 use std::path;
 
