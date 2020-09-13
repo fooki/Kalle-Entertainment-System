@@ -1,11 +1,11 @@
 use base::center;
 use base::SceneUpdate;
-use std::rc::Rc;
 
-use ggez::graphics::{Rect, Color};
-use ggez::mint::Point2;
+
+use ggez::graphics::{Color};
+
 use ggez::{Context, GameResult};
-use ggez::event::{MouseButton};
+
 
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
@@ -17,7 +17,7 @@ pub struct TetrisGame {
 impl TetrisGame {
     pub fn new(ctx: &mut Context) -> TetrisGame {
         let fancy_font = Font::new(ctx, "/boxy.ttf").expect("boom");
-        let (x, y) = center(ctx);
+        let (_x, _y) = center(ctx);
 
         let text = Text::new(
             TextFragment::new("Tetris!!")
@@ -26,13 +26,13 @@ impl TetrisGame {
         );
 
         TetrisGame {
-            text: text
+            text
         }
     }
 }
 
 impl base::Scene for TetrisGame {
-    fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
+    fn update(&mut self, _ctx: &mut Context) -> GameResult<SceneUpdate> {
         Ok(SceneUpdate::Nothing)
     }
 

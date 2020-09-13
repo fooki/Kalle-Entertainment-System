@@ -1,9 +1,9 @@
 use ggez::{graphics, Context, GameResult};
 use ggez::timer::fps;
 use ggez::graphics::{draw, Text, DrawParam};
-use ggez::event::{EventHandler, MouseButton};
+use ggez::event::{EventHandler, MouseButton, quit};
 
-use crate::scene::Scene;
+use crate::scene::*;
 
 pub struct Game {
     draw_fps: bool,
@@ -17,7 +17,14 @@ impl Game {
 }
 
 impl EventHandler for Game {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
+    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+        let result = self.scene.update(ctx)?;
+        match result {
+            SceneUpdate::Quit => quit(ctx),
+            SceneUpdate::Change(new_scene) => {self.scene = new_scene}
+            _ => {}
+        }
+
         Ok(())
     }
 

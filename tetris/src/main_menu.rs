@@ -150,7 +150,7 @@ impl base::Scene for MainMenu {
         }
     }
 
-    fn mouse_motion_event(&mut self, ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
+    fn mouse_motion_event(&mut self, _ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
         let point = Point2 { x, y };
 
         if self.play_btn.contains(point) {
