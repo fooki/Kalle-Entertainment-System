@@ -10,8 +10,7 @@ use clap::Clap;
 use ggez::conf::{self, FullscreenType};
 use ggez::ContextBuilder;
 use ggez::event::{self};
-
-
+use ggez::conf::ModuleConf;
 use main_menu::MainMenu;
 
 #[derive(Clap)]
@@ -28,6 +27,7 @@ fn main() {
     let (mut ctx, mut event_loop) = ContextBuilder::new("my_game", "Karl Johansson")
         .add_resource_path(resource_dir)
         .window_mode(conf::WindowMode::default().fullscreen_type(FullscreenType::Windowed).dimensions(1024.0, 768.0))
+        .modules(ModuleConf { gamepad: true, audio: true})
         .build()
         .expect("aieee, could not create ggez context!");
 

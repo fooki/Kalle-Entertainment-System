@@ -5,7 +5,7 @@ use std::rc::Rc;
 use ggez::graphics::{Rect, Color};
 use ggez::mint::Point2;
 use ggez::{Context, GameResult};
-use ggez::event::{MouseButton};
+use ggez::event::{MouseButton, Button as Mutton, GamepadId, Axis};
 
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
@@ -164,5 +164,8 @@ impl base::Scene for MainMenu {
 
     fn mouse_button_up_event(&mut self, _ctx: &mut Context, _btn: MouseButton, _x: f32, _y: f32) {
         self.cursor_state = CursorState::Idle;
+    }
+
+    fn gamepad_button_down_event(&mut self, _ctx: &mut Context, _btn: Mutton, _id: GamepadId) {
     }
 }
