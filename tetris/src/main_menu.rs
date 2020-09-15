@@ -10,8 +10,10 @@ use ggez::event::{MouseButton, Button as Mutton, GamepadId, Axis};
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
 use crate::tetris_game::TetrisGame;
+use crate::button_group::ButtonGroup;
 
-pub struct MainMenu {
+pub struct MainMenu<'a> {
+    buttons: ButtonGroup<'a>,
     cursor_state: CursorState,
     play_btn: Rc<Button>,
     quit_btn: Rc<Button>
@@ -52,20 +54,10 @@ impl Button {
             })
         )
     }
-
-    fn contains(&self, p: Point2<f32>) -> bool {
-        let rect = Rect::new(
-            self.x - self.half_text_width,
-            self.y - self.half_text_height,
-            self.half_text_width * 2.0,
-            self.half_text_height * 2.0,
-        );
-        rect.contains(p)
-    }
 }
 
-impl MainMenu {
-    pub fn new(ctx: &mut Context) -> MainMenu {
+impl<'a> MainMenu<'a> {
+    pub fn new(ctx: &mut Context) -> MainMenu<'a> {
         let fancy_font = Font::new(ctx, "/boxy.ttf").expect("boom");
         let (x, y) = center(ctx);
 
@@ -84,22 +76,18 @@ impl MainMenu {
         );
         let quit_btn = Rc::new(Button::new(ctx, text, x, y + 100.0));
 
+
+        let buttons = ButtonGroup::new(&["Play", "Quit"]);
         MainMenu {
             cursor_state: CursorState::Idle,
+            buttons,
             play_btn,
             quit_btn
         }
     }
 }
 
-#[derive(PartialEq)]
-enum CursorState {
-    Idle,
-    Hovering(Rc<Button>),
-    MouseDown(Rc<Button>)
-}
-
-impl base::Scene for MainMenu {
+impl<'a> base::Scene for MainMenu<'a> {
     fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
         if let CursorState::MouseDown(btn) = &self.cursor_state {
             if btn.id == self.quit_btn.id {
@@ -140,32 +128,15 @@ impl base::Scene for MainMenu {
         Ok(())
     }
 
-    fn mouse_button_down_event(&mut self, _ctx: &mut Context, _btn: MouseButton, x: f32, y: f32) {
-        let point = Point2 { x, y };
+    fn gamepad_axis_event(&mut self, _ctx: &mut Context, axis: Axis, _value: f32, _id: GamepadId) {
 
-        if self.play_btn.contains(point) {
-            self.cursor_state = CursorState::MouseDown(self.play_btn.clone());
-        } else if self.quit_btn.contains(point) {
-            self.cursor_state = CursorState::MouseDown(self.quit_btn.clone());
-        }
-    }
-
-    fn mouse_motion_event(&mut self, _ctx: &mut Context, x: f32, y: f32, _xrel: f32, _yrel: f32) {
-        let point = Point2 { x, y };
-
-        if self.play_btn.contains(point) {
-            self.cursor_state = CursorState::Hovering(self.play_btn.clone());
-        } else if self.quit_btn.contains(point) {
-            self.cursor_state = CursorState::Hovering(self.quit_btn.clone());
-        } else {
-            self.cursor_state = CursorState::Idle;
-        }
-    }
-
-    fn mouse_button_up_event(&mut self, _ctx: &mut Context, _btn: MouseButton, _x: f32, _y: f32) {
-        self.cursor_state = CursorState::Idle;
     }
 
     fn gamepad_button_down_event(&mut self, _ctx: &mut Context, _btn: Mutton, _id: GamepadId) {
+
+    }
+
+    fn gamepad_button_up_event(&mut self, _ctx: &mut Context, _btn: Mutton, _id: GamepadId) {
+
     }
 }

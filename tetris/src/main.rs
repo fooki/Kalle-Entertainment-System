@@ -1,5 +1,6 @@
 #[macro_use] extern crate log;
 
+mod button_group;
 mod main_menu;
 mod tetris_game;
 
