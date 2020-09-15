@@ -14,7 +14,6 @@ use crate::button_group::ButtonGroup;
 
 pub struct MainMenu<'a> {
     buttons: ButtonGroup<'a>,
-    cursor_state: CursorState,
     play_btn: Rc<Button>,
     quit_btn: Rc<Button>
 }
@@ -79,7 +78,6 @@ impl<'a> MainMenu<'a> {
 
         let buttons = ButtonGroup::new(&["Play", "Quit"]);
         MainMenu {
-            cursor_state: CursorState::Idle,
             buttons,
             play_btn,
             quit_btn
@@ -89,41 +87,13 @@ impl<'a> MainMenu<'a> {
 
 impl<'a> base::Scene for MainMenu<'a> {
     fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
-        if let CursorState::MouseDown(btn) = &self.cursor_state {
-            if btn.id == self.quit_btn.id {
-                return Ok(SceneUpdate::Quit);
-            }
-
-            if btn.id == self.play_btn.id {
-                return Ok(SceneUpdate::Change(Box::new(TetrisGame::new(ctx))));
-            }
-        }
-
         Ok(SceneUpdate::Nothing)
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         let base_params = DrawParam::new().color(Color::new(1.0, 1.0, 1.0, 1.0));
-
-        let play_hover =
-            self.cursor_state == CursorState::Hovering(self.play_btn.clone());
-        let quit_hover =
-            self.cursor_state == CursorState::Hovering(self.quit_btn.clone());
-
-        let play_draw_params = if play_hover {
-            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
-        } else {
-            base_params
-        };
-
-        let quit_draw_params = if quit_hover {
-            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
-        } else {
-            base_params
-        };
-
-        self.play_btn.draw(ctx, &play_draw_params)?;
-        self.quit_btn.draw(ctx, &quit_draw_params)?;
+        self.play_btn.draw(ctx, &base_params)?;
+        self.quit_btn.draw(ctx, &base_params)?;
 
         Ok(())
     }
