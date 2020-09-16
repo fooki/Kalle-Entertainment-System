@@ -2,12 +2,10 @@ use base::center;
 use base::SceneUpdate;
 use std::rc::Rc;
 
-use ggez::graphics::{Rect, Color};
 use ggez::mint::Point2;
 use ggez::{Context, GameResult};
-use ggez::event::{MouseButton, Button as Mutton, GamepadId, Axis};
-
-use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
+use ggez::input::keyboard::{self,KeyMods, KeyCode};
+use ggez::graphics::{draw, Color, Text, DrawParam, Font, TextFragment, Scale};
 
 use crate::tetris_game::TetrisGame;
 use crate::button_group::ButtonGroup;
@@ -15,7 +13,10 @@ use crate::button_group::ButtonGroup;
 pub struct MainMenu<'a> {
     buttons: ButtonGroup<'a>,
     play_btn: Rc<Button>,
-    quit_btn: Rc<Button>
+    quit_btn: Rc<Button>,
+    button_a: bool,
+    button_b: bool,
+
 }
 
 pub struct Button {
@@ -75,38 +76,75 @@ impl<'a> MainMenu<'a> {
         );
         let quit_btn = Rc::new(Button::new(ctx, text, x, y + 100.0));
 
+        let button_a = false;
+        let button_b = false;
 
         let buttons = ButtonGroup::new(&["Play", "Quit"]);
         MainMenu {
             buttons,
             play_btn,
-            quit_btn
+            quit_btn,
+            button_a,
+            button_b,
         }
     }
 }
 
 impl<'a> base::Scene for MainMenu<'a> {
     fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
+        if self.button_a {
+            if self.buttons.current() == "Play" {
+                return Ok(SceneUpdate::Change(
+                    Box::new(TetrisGame::new(ctx)))
+                )
+            }
+
+            if self.buttons.current() == "Quit" {
+                return Ok(SceneUpdate::Quit)
+            }
+        }
+
+        self.button_a = false;
+        self.button_b = false;
         Ok(SceneUpdate::Nothing)
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         let base_params = DrawParam::new().color(Color::new(1.0, 1.0, 1.0, 1.0));
-        self.play_btn.draw(ctx, &base_params)?;
-        self.quit_btn.draw(ctx, &base_params)?;
+
+        let play_params = if self.buttons.current() == "Play" {
+            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
+        } else {
+            base_params
+        };
+
+        let quit_params = if self.buttons.current() == "Quit" {
+            base_params.color(Color::new(1.0, 0.0, 0.0, 1.0))
+        } else {
+            base_params
+        };
+
+        self.play_btn.draw(ctx, &play_params)?;
+        self.quit_btn.draw(ctx, &quit_params)?;
 
         Ok(())
     }
 
-    fn gamepad_axis_event(&mut self, _ctx: &mut Context, axis: Axis, _value: f32, _id: GamepadId) {
+    fn key_down_event(&mut self, ctx: &mut Context, _keycode: KeyCode, _keymod: KeyMods, _repeat: bool) {
+        if keyboard::is_key_pressed(ctx, KeyCode::Up) {
+            self.buttons.up()
+        }
 
-    }
+        if keyboard::is_key_pressed(ctx, KeyCode::Down) {
+            self.buttons.down()
+        }
 
-    fn gamepad_button_down_event(&mut self, _ctx: &mut Context, _btn: Mutton, _id: GamepadId) {
+        if keyboard::is_key_pressed(ctx, KeyCode::A) {
+            self.button_a = true
+        }
 
-    }
-
-    fn gamepad_button_up_event(&mut self, _ctx: &mut Context, _btn: Mutton, _id: GamepadId) {
-
+        if keyboard::is_key_pressed(ctx, KeyCode::B) {
+            self.button_b = true
+        }
     }
 }

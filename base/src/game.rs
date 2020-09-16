@@ -1,7 +1,9 @@
 use ggez::{graphics, Context, GameResult};
 use ggez::timer::fps;
 use ggez::graphics::{draw, Text, DrawParam};
-use ggez::event::{EventHandler, MouseButton, quit};
+use ggez::event::{quit, EventHandler, MouseButton, Button, GamepadId, Axis, KeyCode};
+use ggez::input::keyboard::KeyMods;
+
 
 use crate::scene::*;
 
@@ -50,5 +52,25 @@ impl EventHandler for Game {
 
     fn mouse_button_up_event(&mut self, ctx: &mut Context, button: MouseButton, x: f32, y: f32) {
         self.scene.mouse_button_up_event(ctx, button, x, y);
+    }
+
+    fn gamepad_button_up_event(&mut self, ctx: &mut Context, btn: Button, id: GamepadId) {
+        self.scene.gamepad_button_up_event(ctx, btn, id);
+    }
+
+    fn gamepad_button_down_event(&mut self, ctx: &mut Context, btn: Button, id: GamepadId) {
+        self.scene.gamepad_button_down_event(ctx, btn, id);
+    }
+
+    fn gamepad_axis_event(&mut self, ctx: &mut Context, axis: Axis, value: f32, id: GamepadId) {
+        self.scene.gamepad_axis_event(ctx, axis, value, id);
+    }
+
+    fn key_down_event(&mut self, ctx: &mut Context, keycode: KeyCode, keymod: KeyMods, repeat: bool) {
+        self.scene.key_down_event(ctx, keycode, keymod, repeat)
+    }
+
+    fn key_up_event(&mut self, ctx: &mut Context, keycode: KeyCode, keymod: KeyMods) {
+        self.scene.key_up_event(ctx, keycode, keymod)
     }
 }

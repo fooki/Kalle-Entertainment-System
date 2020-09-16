@@ -12,10 +12,6 @@ impl<'a> ButtonGroup<'a> {
         self.labels[self.index]
     }
 
-    pub fn all(&self) -> &'a[&'a str] {
-        self.labels
-    }
-
     pub fn down(&mut self) {
         self.index = (self.index + 1) % self.labels.len();
     }
@@ -72,11 +68,5 @@ mod tests {
 
         group.up();
         assert_eq!(group.current(), "Play");
-    }
-
-    #[test]
-    fn test_all_returns_the_labels() {
-        let group = ButtonGroup::new(&["Play", "Options", "Quit"]);
-        assert_eq!(group.all(), &["Play", "Options", "Quit"]);
     }
 }
