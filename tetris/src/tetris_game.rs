@@ -1,17 +1,15 @@
 use base::center;
 use base::SceneUpdate;
 
+use crate::board::Board;
 
 use ggez::graphics::{Color};
-
 use ggez::{Context, GameResult};
-
-
 use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
 
-
 pub struct TetrisGame {
-    text: Text
+    board: Board,
+    text: Text,
 }
 
 impl TetrisGame {
@@ -25,9 +23,17 @@ impl TetrisGame {
                 .scale(Scale::uniform(40.0))
         );
 
+        let board = Board::new();
+
         TetrisGame {
-            text
+            text, board
         }
+    }
+}
+
+impl TetrisGame {
+    fn draw_board(&mut self, ctx: &mut Context) -> GameResult<()> {
+        Ok(())
     }
 }
 
@@ -39,11 +45,8 @@ impl base::Scene for TetrisGame {
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         let base_params = DrawParam::new().color(Color::new(1.0, 1.0, 1.0, 1.0));
 
-        draw(
-            ctx,
-            &self.text,
-            base_params
-        )?;
+        self.draw_board(ctx)?;
+        draw(ctx, &self.text, base_params)?;
 
         Ok(())
     }
