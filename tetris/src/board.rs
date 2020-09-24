@@ -1,23 +1,19 @@
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum TetrisBlock {
-    Empty, I, T, O, L, J, S, Z
-}
+use crate::tetris_block::TetrisBlock;
+use crate::figure::Figure;
 
 pub struct Board {
-    current_type: Option<TetrisBlock>,
-    current_position: Option<(usize, usize)>,
+    current_figure: Option<Figure>,
     cells: [[TetrisBlock; 10]; 20],
 }
 
 impl Board {
     pub fn new() -> Self {
         let cells = [[TetrisBlock::Empty; 10]; 20];
-        Self { cells, current_position: None, current_type: None }
+        Self { cells, current_figure: None }
     }
 
-    pub fn set_current(&mut self, x: usize, y: usize, block_type: TetrisBlock) {
-        self.current_type = Some(block_type);
-        self.current_position = Some((x, y));
+    pub fn set_current(&mut self, x: usize, y: usize, kind: TetrisBlock) {
+        self.current_figure = Some(Figure::new(x, y, kind));
     }
 }
 
