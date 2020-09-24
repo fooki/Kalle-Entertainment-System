@@ -50,7 +50,7 @@ mod tests {
 
     #[test]
     fn test_new_does_not_crash() {
-        let figure = Figure::new(0, 5, TetrisBlock::L);
+        let _figure = Figure::new(0, 5, TetrisBlock::L);
     }
 
     #[test]

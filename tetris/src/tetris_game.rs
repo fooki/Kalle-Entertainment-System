@@ -3,9 +3,9 @@ use base::SceneUpdate;
 
 use crate::board::Board;
 
-use ggez::graphics::{Color};
+use ggez::mint::Point2;
 use ggez::{Context, GameResult};
-use ggez::graphics::{draw, Text, DrawParam, Font, TextFragment, Scale};
+use ggez::graphics::{self, draw, Color, Rect, Text, DrawParam, Font, TextFragment, Scale};
 
 pub struct TetrisGame {
     board: Board,
@@ -33,6 +33,16 @@ impl TetrisGame {
 
 impl TetrisGame {
     fn draw_board(&mut self, ctx: &mut Context) -> GameResult<()> {
+        let color = [0.1, 0.1, 0.1, 1.0].into();
+        let (x, y) = center(ctx);
+        let rectangle =
+            graphics::Mesh::new_rectangle(
+                ctx,
+                graphics::DrawMode::fill(),
+                Rect::new(0.0, 0.0, 200.0, 400.0),
+                color
+            )?;
+        draw(ctx, &rectangle, (Point2 { x: x-100.0, y: y-200.0 },))?;
         Ok(())
     }
 }
