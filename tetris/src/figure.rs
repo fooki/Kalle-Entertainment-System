@@ -66,7 +66,7 @@ mod tests {
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_I_based_on_pos() {
+    fn test_blocks_returns_all_positions_for_i_based_on_pos() {
         let figure = Figure::new(0, 0, TetrisBlock::I);
         assert_eq!(figure.blocks(), [(0,0), (0,1), (0,2), (0,3)]);
 
@@ -75,7 +75,7 @@ mod tests {
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_T_based_on_pos() {
+    fn test_blocks_returns_all_positions_for_t_based_on_pos() {
         let figure = Figure::new(0, 0, TetrisBlock::T);
         assert_eq!(figure.blocks(), [(1,0), (0,1), (1,1), (2,1)]);
 
@@ -84,7 +84,7 @@ mod tests {
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_O_based_on_pos() {
+    fn test_blocks_returns_all_positions_for_o_based_on_pos() {
         let figure = Figure::new(0, 0, TetrisBlock::O);
         assert_eq!(figure.blocks(), [(0,0), (1,0), (0,1), (1,1)]);
 
