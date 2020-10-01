@@ -16,6 +16,10 @@ impl Figure {
         self.y = (self.y as i32 + y) as usize;
     }
 
+    pub fn kind(&self) -> TetrisBlock {
+        self.kind
+    }
+
     pub fn blocks(&self) -> [(usize,usize);4] {
         match self.kind {
             TetrisBlock::I => {
@@ -57,6 +61,12 @@ mod tests {
     fn test_translate_does_not_crash() {
         let mut figure = Figure::new(3, 5, TetrisBlock::L);
         figure.translate(1, 4);
+    }
+
+    #[test]
+    fn test_kind_returns_its_block_type() {
+        let figure = Figure::new(3, 5, TetrisBlock::O);
+        assert_eq!(figure.kind(), TetrisBlock::O)
     }
 
     #[test]

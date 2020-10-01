@@ -18,6 +18,10 @@ impl Board {
         self.current_figure = Some(Figure::new(x, y, kind));
     }
 
+    pub fn current(&self) -> Option<&Figure> {
+        self.current_figure.as_ref()
+    }
+
     pub fn cells(&self) -> &BoardCells {
         &self.cells
     }
