@@ -4,7 +4,7 @@ use crate::figure::Figure;
 type BoardCells = [[TetrisBlock; 10]; 20];
 
 pub struct Board {
-    current_figure: Option<Figure>,
+    pub current_figure: Option<Figure>,
     cells: BoardCells,
 }
 
@@ -16,10 +16,6 @@ impl Board {
 
     pub fn set_current(&mut self, x: usize, y: usize, kind: TetrisBlock) {
         self.current_figure = Some(Figure::new(x, y, kind));
-    }
-
-    pub fn current(&self) -> Option<&Figure> {
-        self.current_figure.as_ref()
     }
 
     pub fn cells(&self) -> &BoardCells {
@@ -69,8 +65,8 @@ mod tests {
         let mut board = Board::new();
         board.set_current(5, 0, TetrisBlock::T);
         board.tick();
-        assert_eq!(board.current().unwrap().y, 1);
+        assert_eq!(board.current_figure.as_ref().unwrap().y, 1);
         board.tick();
-        assert_eq!(board.current().unwrap().y, 2);
+        assert_eq!(board.current_figure.as_ref().unwrap().y, 2);
     }
 }

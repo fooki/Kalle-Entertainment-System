@@ -67,7 +67,7 @@ impl TetrisGame {
         let (center_x, center_y) = center(ctx);
         let (base_x, base_y) = (center_x-100.0, center_y-200.0);
 
-        if let Some(current) = self.board.current() {
+        if let Some(ref current) = self.board.current_figure {
 
         let rectangle =
             graphics::Mesh::new_rectangle(
