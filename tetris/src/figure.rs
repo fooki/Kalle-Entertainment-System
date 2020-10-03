@@ -3,7 +3,7 @@ use crate::tetris_block::TetrisBlock;
 pub struct Figure {
     pub x: usize,
     pub y: usize,
-    kind: TetrisBlock
+    pub kind: TetrisBlock
 }
 
 impl Figure {

@@ -27,7 +27,7 @@ impl TetrisGame {
                 .scale(Scale::uniform(40.0))
         );
 
-        let mut board = Board::new();
+        let mut board = Board::new(|| TetrisBlock::T);
         board.set_current(0,0,TetrisBlock::T);
 
         TetrisGame {
