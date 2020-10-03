@@ -5,12 +5,15 @@ use crate::board::Board;
 use crate::tetris_block::TetrisBlock;
 
 use ggez::mint::Point2;
+use ggez::timer::check_update_time;
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, draw, Color, Rect, Text, DrawParam, Font, TextFragment, Scale};
 
 pub struct TetrisGame {
     board: Board,
     text: Text,
+    inverted_speed: u32,
+    tick_count: u32,
 }
 
 impl TetrisGame {
@@ -28,7 +31,7 @@ impl TetrisGame {
         board.set_current(0,0,TetrisBlock::T);
 
         TetrisGame {
-            text, board
+            text, board, tick_count: 0, inverted_speed: 60
         }
     }
 }
@@ -86,13 +89,21 @@ impl TetrisGame {
             }
         }
 
-
         Ok(())
     }
 }
 
 impl base::Scene for TetrisGame {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<SceneUpdate> {
+    fn update(&mut self, ctx: &mut Context) -> GameResult<SceneUpdate> {
+        const DESIRED_FPS: u32 = 60;
+
+        while check_update_time(ctx, DESIRED_FPS) {
+            self.tick_count += 1;
+            if self.tick_count >= self.inverted_speed {
+                self.board.tick();
+                self.tick_count = 0;
+            }
+        }
         Ok(SceneUpdate::Nothing)
     }
 
