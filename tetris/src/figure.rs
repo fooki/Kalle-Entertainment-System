@@ -43,6 +43,34 @@ impl Figure {
                  (self.x + 1, self.y + 1)]
             },
 
+            TetrisBlock::L => {
+                [(self.x, self.y),
+                 (self.x, self.y + 1),
+                 (self.x, self.y + 2),
+                 (self.x + 1, self.y + 2)]
+            },
+
+            TetrisBlock::J => {
+                [(self.x + 1, self.y),
+                 (self.x + 1, self.y + 1),
+                 (self.x + 1, self.y + 2),
+                 (self.x, self.y + 2)]
+            },
+
+            TetrisBlock::S => {
+                [(self.x, self.y + 1),
+                 (self.x + 1, self.y + 1),
+                 (self.x + 1, self.y),
+                 (self.x + 2, self.y)]
+            },
+
+            TetrisBlock::Z => {
+                [(self.x, self.y),
+                 (self.x + 1, self.y),
+                 (self.x + 1, self.y + 1),
+                 (self.x + 2, self.y + 1)]
+            },
+
             _ => { panic!("Bad block") }
         }
     }
@@ -100,6 +128,42 @@ mod tests {
 
         let figure = Figure::new(4, 1, TetrisBlock::O);
         assert_eq!(figure.blocks(), [(4,1), (5,1), (4,2), (5,2)]);
+    }
+
+    #[test]
+    fn test_blocks_returns_all_positions_for_l_based_on_pos() {
+        let figure = Figure::new(0, 0, TetrisBlock::L);
+        assert_eq!(figure.blocks(), [(0,0), (0,1), (0,2), (1,2)]);
+
+        let figure = Figure::new(2, 3, TetrisBlock::L);
+        assert_eq!(figure.blocks(), [(2,3), (2,4), (2,5), (3,5)]);
+    }
+
+    #[test]
+    fn test_blocks_returns_all_positions_for_j_based_on_pos() {
+        let figure = Figure::new(0, 0, TetrisBlock::J);
+        assert_eq!(figure.blocks(), [(1,0), (1,1), (1,2), (0,2)]);
+
+        let figure = Figure::new(1, 1, TetrisBlock::J);
+        assert_eq!(figure.blocks(), [(2,1), (2,2), (2,3), (1,3)]);
+    }
+
+    #[test]
+    fn test_blocks_returns_all_positions_for_s_based_on_pos() {
+        let figure = Figure::new(0, 0, TetrisBlock::S);
+        assert_eq!(figure.blocks(), [(0,1), (1,1), (1,0), (2,0)]);
+
+        let figure = Figure::new(5, 0, TetrisBlock::S);
+        assert_eq!(figure.blocks(), [(5,1), (6,1), (6,0), (7,0)]);
+    }
+
+    #[test]
+    fn test_blocks_returns_all_positions_for_z_based_on_pos() {
+        let figure = Figure::new(0, 0, TetrisBlock::Z);
+        assert_eq!(figure.blocks(), [(0,0), (1,0), (1,1), (2,1)]);
+
+        let figure = Figure::new(1, 4, TetrisBlock::Z);
+        assert_eq!(figure.blocks(), [(1,4), (2,4), (2,5), (3,5)]);
     }
 
     #[test]
