@@ -1,8 +1,8 @@
 use crate::tetris_block::TetrisBlock;
 
 pub struct Figure {
-    x: usize,
-    y: usize,
+    pub x: usize,
+    pub y: usize,
     kind: TetrisBlock
 }
 
