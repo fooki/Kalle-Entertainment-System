@@ -28,7 +28,6 @@ impl TetrisGame {
         );
 
         let mut board = Board::new(|| TetrisBlock::T);
-        board.set_current(0,0,TetrisBlock::T);
 
         TetrisGame {
             text, board, tick_count: 0, inverted_speed: 60

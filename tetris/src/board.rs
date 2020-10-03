@@ -15,10 +15,6 @@ impl Board {
         Self { cells, generator, current_figure: None }
     }
 
-    pub fn set_current(&mut self, x: usize, y: usize, kind: TetrisBlock) {
-        self.current_figure = Some(Figure::new(x, y, kind));
-    }
-
     pub fn cells(&self) -> &BoardCells {
         &self.cells
     }
@@ -27,7 +23,7 @@ impl Board {
         if let Some(ref mut figure) = self.current_figure {
             figure.translate(0,1);
         } else {
-            self.set_current(5, 0, (self.generator)());
+            self.current_figure = Some(Figure::new(4, 0, (self.generator)()));
         }
     }
 }
@@ -50,12 +46,6 @@ mod tests {
     }
 
     #[test]
-    fn test_set_current_adds_block() {
-        let mut board = Board::new(generator);
-        board.set_current(5, 0, TetrisBlock::T);
-    }
-
-    #[test]
     fn test_initial_board_returns_empty_cells() {
         let board = Board::new(generator);
         assert_eq!(&empty_cells(), board.cells());
@@ -65,16 +55,6 @@ mod tests {
     fn test_tick_does_nothing_without_a_current_figure() {
         let mut board = Board::new(|| TetrisBlock::O);
         board.tick();
-    }
-
-    #[test]
-    fn test_tick_moves_the_current_figure() {
-        let mut board = Board::new(generator);
-        board.set_current(5, 0, TetrisBlock::T);
-        board.tick();
-        assert_eq!(board.current_figure.as_ref().unwrap().y, 1);
-        board.tick();
-        assert_eq!(board.current_figure.as_ref().unwrap().y, 2);
     }
 
     #[test]
