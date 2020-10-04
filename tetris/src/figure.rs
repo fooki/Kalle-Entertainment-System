@@ -21,58 +21,23 @@ impl Figure {
     }
 
     pub fn blocks(&self) -> [(usize,usize);4] {
-        match self.kind {
-            TetrisBlock::I => {
-                [(self.x, self.y),
-                 (self.x, self.y + 1),
-                 (self.x, self.y + 2),
-                 (self.x, self.y + 3)]
-            },
-
-            TetrisBlock::T => {
-                [(self.x + 1, self.y),
-                 (self.x, self.y + 1),
-                 (self.x + 1, self.y + 1),
-                 (self.x + 2, self.y + 1)]
-            },
-
-            TetrisBlock::O => {
-                [(self.x, self.y),
-                 (self.x + 1, self.y),
-                 (self.x, self.y + 1),
-                 (self.x + 1, self.y + 1)]
-            },
-
-            TetrisBlock::L => {
-                [(self.x, self.y),
-                 (self.x, self.y + 1),
-                 (self.x, self.y + 2),
-                 (self.x + 1, self.y + 2)]
-            },
-
-            TetrisBlock::J => {
-                [(self.x + 1, self.y),
-                 (self.x + 1, self.y + 1),
-                 (self.x + 1, self.y + 2),
-                 (self.x, self.y + 2)]
-            },
-
-            TetrisBlock::S => {
-                [(self.x, self.y + 1),
-                 (self.x + 1, self.y + 1),
-                 (self.x + 1, self.y),
-                 (self.x + 2, self.y)]
-            },
-
-            TetrisBlock::Z => {
-                [(self.x, self.y),
-                 (self.x + 1, self.y),
-                 (self.x + 1, self.y + 1),
-                 (self.x + 2, self.y + 1)]
-            },
-
+        let deltas = match self.kind {
+            TetrisBlock::I => [(0, 0), (0, 1), (0, 2), (0, 3)],
+            TetrisBlock::T => [(1, 0), (0, 1), (1, 1), (2, 1)],
+            TetrisBlock::O => [(0, 0), (1, 0), (0, 1), (1, 1)],
+            TetrisBlock::L => [(0, 0), (0, 1), (0, 2), (1, 2)],
+            TetrisBlock::J => [(1, 0), (1, 1), (1, 2), (0, 2)],
+            TetrisBlock::S => [(0, 1), (1, 1), (1, 0), (2, 0)],
+            TetrisBlock::Z => [(0, 0), (1, 0), (1, 1), (2, 1)],
             _ => { panic!("Bad block") }
-        }
+        };
+
+        [
+            (deltas[0].0 + self.x, deltas[0].1 + self.y),
+            (deltas[1].0 + self.x, deltas[1].1 + self.y),
+            (deltas[2].0 + self.x, deltas[2].1 + self.y),
+            (deltas[3].0 + self.x, deltas[3].1 + self.y),
+        ]
     }
 }
 
