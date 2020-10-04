@@ -1,43 +1,320 @@
-use crate::tetris_block::TetrisBlock;
-
-pub struct Figure {
-    pub x: usize,
-    pub y: usize,
-    pub kind: TetrisBlock
+pub trait Figure {
+    fn deltas(&self) -> [(usize,usize);4];
+    fn rotate(&self) -> Box<dyn Figure>;
 }
 
-impl Figure {
-    pub fn new(x: usize, y: usize, kind: TetrisBlock) -> Self {
-        Self {x, y, kind }
+pub struct NorthO();
+pub struct EastO();
+pub struct SouthO();
+pub struct WestO();
+
+impl Figure for NorthO {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (0, 1), (1, 1)]
     }
 
-    pub fn translate(&mut self, x: i32, y: i32) {
-        self.x = (self.x as i32 + x) as usize;
-        self.y = (self.y as i32 + y) as usize;
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastO())
+    }
+}
+
+impl Figure for EastO {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (0, 1), (1, 1)]
     }
 
-    pub fn kind(&self) -> TetrisBlock {
-        self.kind
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthO())
+    }
+}
+
+impl Figure for SouthO {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (0, 1), (1, 1)]
     }
 
-    pub fn blocks(&self) -> [(usize,usize);4] {
-        let deltas = match self.kind {
-            TetrisBlock::I => [(0, 0), (0, 1), (0, 2), (0, 3)],
-            TetrisBlock::T => [(1, 0), (0, 1), (1, 1), (2, 1)],
-            TetrisBlock::O => [(0, 0), (1, 0), (0, 1), (1, 1)],
-            TetrisBlock::L => [(0, 0), (0, 1), (0, 2), (1, 2)],
-            TetrisBlock::J => [(1, 0), (1, 1), (1, 2), (0, 2)],
-            TetrisBlock::S => [(0, 1), (1, 1), (1, 0), (2, 0)],
-            TetrisBlock::Z => [(0, 0), (1, 0), (1, 1), (2, 1)],
-            _ => { panic!("Bad block") }
-        };
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestO())
+    }
+}
 
-        [
-            (deltas[0].0 + self.x, deltas[0].1 + self.y),
-            (deltas[1].0 + self.x, deltas[1].1 + self.y),
-            (deltas[2].0 + self.x, deltas[2].1 + self.y),
-            (deltas[3].0 + self.x, deltas[3].1 + self.y),
-        ]
+impl Figure for WestO {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (0, 1), (1, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthO())
+    }
+}
+
+pub struct NorthI();
+pub struct EastI();
+pub struct SouthI();
+pub struct WestI();
+
+impl Figure for NorthI {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (0, 2), (0, 3)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastI())
+    }
+}
+
+impl Figure for EastI {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (2, 0), (3, 0)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthI())
+    }
+}
+
+impl Figure for SouthI {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (0, 2), (0, 3)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestI())
+    }
+}
+
+impl Figure for WestI {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (2, 0), (3, 0)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthI())
+    }
+}
+
+pub struct NorthT();
+pub struct EastT();
+pub struct SouthT();
+pub struct WestT();
+
+impl Figure for NorthT {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(1, 0), (0, 1), (1, 1), (2, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastT())
+    }
+}
+
+impl Figure for EastT {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (1, 1), (0, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthT())
+    }
+}
+
+impl Figure for SouthT {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (2, 0), (1, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestT())
+    }
+}
+
+impl Figure for WestT {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(1, 0), (1, 1), (1, 2), (0, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthT())
+    }
+}
+
+pub struct NorthL();
+pub struct EastL();
+pub struct SouthL();
+pub struct WestL();
+
+impl Figure for NorthL {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (0, 2), (1, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastL())
+    }
+}
+
+impl Figure for EastL {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (2, 0), (0, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthL())
+    }
+}
+
+impl Figure for SouthL {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (1, 1), (1, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestL())
+    }
+}
+
+impl Figure for WestL {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 1), (1, 1), (2, 1), (2, 0)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthL())
+    }
+}
+
+pub struct NorthJ();
+pub struct EastJ();
+pub struct SouthJ();
+pub struct WestJ();
+
+impl Figure for NorthJ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(1, 0), (1, 1), (1, 2), (0, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastJ())
+    }
+}
+
+impl Figure for EastJ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (1, 1), (2, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthJ())
+    }
+}
+
+impl Figure for SouthJ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (0, 1), (0, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestJ())
+    }
+}
+
+impl Figure for WestJ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (2, 0), (2, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthJ())
+    }
+}
+
+pub struct NorthS();
+pub struct EastS();
+pub struct SouthS();
+pub struct WestS();
+
+impl Figure for NorthS {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 1), (1, 1), (1, 0), (2, 0)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastS())
+    }
+}
+
+impl Figure for EastS {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (1, 1), (1, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthS())
+    }
+}
+
+impl Figure for SouthS {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 1), (1, 1), (1, 0), (2, 0)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestS())
+    }
+}
+
+impl Figure for WestS {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (0, 1), (1, 1), (1, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthS())
+    }
+}
+
+pub struct NorthZ();
+pub struct EastZ();
+pub struct SouthZ();
+pub struct WestZ();
+
+impl Figure for NorthZ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (1, 1), (2, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(EastZ())
+    }
+}
+
+impl Figure for EastZ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(1, 0), (1, 1), (0, 1), (0, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(SouthZ())
+    }
+}
+
+impl Figure for SouthZ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(0, 0), (1, 0), (1, 1), (2, 1)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(WestZ())
+    }
+}
+
+impl Figure for WestZ {
+    fn deltas(&self) -> [(usize,usize);4] {
+        [(1, 0), (1, 1), (0, 1), (0, 2)]
+    }
+
+    fn rotate(&self) -> Box<dyn Figure> {
+        Box::new(NorthZ())
     }
 }
 
@@ -46,100 +323,58 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_new_does_not_crash() {
-        let _figure = Figure::new(0, 5, TetrisBlock::L);
+    fn test_o_deltas() {
+        NorthO().deltas();
+        EastO().deltas();
+        SouthO().deltas();
+        WestO().deltas();
     }
 
     #[test]
-    fn test_translate_does_not_crash() {
-        let mut figure = Figure::new(3, 5, TetrisBlock::L);
-        figure.translate(1, 4);
+    fn test_i_deltas() {
+        NorthI().deltas();
+        EastI().deltas();
+        SouthI().deltas();
+        WestI().deltas();
     }
 
     #[test]
-    fn test_kind_returns_its_block_type() {
-        let figure = Figure::new(3, 5, TetrisBlock::O);
-        assert_eq!(figure.kind(), TetrisBlock::O)
+    fn test_t_deltas() {
+        NorthT().deltas();
+        EastT().deltas();
+        SouthT().deltas();
+        WestT().deltas();
     }
 
     #[test]
-    #[should_panic]
-    fn test_blocks_panics_on_empty_block() {
-        Figure::new(0, 0, TetrisBlock::Empty).blocks();
+    fn test_l_deltas() {
+        NorthL().deltas();
+        EastL().deltas();
+        SouthL().deltas();
+        WestL().deltas();
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_i_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::I);
-        assert_eq!(figure.blocks(), [(0,0), (0,1), (0,2), (0,3)]);
-
-        let figure = Figure::new(2, 5, TetrisBlock::I);
-        assert_eq!(figure.blocks(), [(2,5), (2,6), (2,7), (2,8)]);
+    fn test_j_deltas() {
+        NorthJ().deltas();
+        EastJ().deltas();
+        SouthJ().deltas();
+        WestJ().deltas();
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_t_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::T);
-        assert_eq!(figure.blocks(), [(1,0), (0,1), (1,1), (2,1)]);
-
-        let figure = Figure::new(3, 3, TetrisBlock::T);
-        assert_eq!(figure.blocks(), [(4,3), (3,4), (4,4), (5,4)]);
+    fn test_s_deltas() {
+        NorthS().deltas();
+        EastS().deltas();
+        SouthS().deltas();
+        WestS().deltas();
     }
 
     #[test]
-    fn test_blocks_returns_all_positions_for_o_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::O);
-        assert_eq!(figure.blocks(), [(0,0), (1,0), (0,1), (1,1)]);
-
-        let figure = Figure::new(4, 1, TetrisBlock::O);
-        assert_eq!(figure.blocks(), [(4,1), (5,1), (4,2), (5,2)]);
-    }
-
-    #[test]
-    fn test_blocks_returns_all_positions_for_l_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::L);
-        assert_eq!(figure.blocks(), [(0,0), (0,1), (0,2), (1,2)]);
-
-        let figure = Figure::new(2, 3, TetrisBlock::L);
-        assert_eq!(figure.blocks(), [(2,3), (2,4), (2,5), (3,5)]);
-    }
-
-    #[test]
-    fn test_blocks_returns_all_positions_for_j_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::J);
-        assert_eq!(figure.blocks(), [(1,0), (1,1), (1,2), (0,2)]);
-
-        let figure = Figure::new(1, 1, TetrisBlock::J);
-        assert_eq!(figure.blocks(), [(2,1), (2,2), (2,3), (1,3)]);
-    }
-
-    #[test]
-    fn test_blocks_returns_all_positions_for_s_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::S);
-        assert_eq!(figure.blocks(), [(0,1), (1,1), (1,0), (2,0)]);
-
-        let figure = Figure::new(5, 0, TetrisBlock::S);
-        assert_eq!(figure.blocks(), [(5,1), (6,1), (6,0), (7,0)]);
-    }
-
-    #[test]
-    fn test_blocks_returns_all_positions_for_z_based_on_pos() {
-        let figure = Figure::new(0, 0, TetrisBlock::Z);
-        assert_eq!(figure.blocks(), [(0,0), (1,0), (1,1), (2,1)]);
-
-        let figure = Figure::new(1, 4, TetrisBlock::Z);
-        assert_eq!(figure.blocks(), [(1,4), (2,4), (2,5), (3,5)]);
-    }
-
-    #[test]
-    fn test_translate_moves_around_the_blocks() {
-        let mut figure = Figure::new(0, 0, TetrisBlock::O);
-        assert_eq!(figure.blocks()[0], (0, 0));
-
-        figure.translate(3, 2);
-        assert_eq!(figure.blocks()[0], (3, 2));
-
-        figure.translate(-1, 2);
-        assert_eq!(figure.blocks()[0], (2, 4));
+    fn test_z_deltas() {
+        NorthZ().deltas();
+        EastZ().deltas();
+        SouthZ().deltas();
+        WestZ().deltas();
     }
 }

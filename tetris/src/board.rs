@@ -1,10 +1,10 @@
 use crate::tetris_block::TetrisBlock;
-use crate::figure::Figure;
+use crate::figure_state::FigureState;
 
 type BoardCells = [[TetrisBlock; 10]; 20];
 
 pub struct Board {
-    pub current_figure: Option<Figure>,
+    pub current_figure: Option<FigureState>,
     cells: BoardCells,
     generator: fn() -> TetrisBlock,
 }
@@ -23,7 +23,7 @@ impl Board {
         if let Some(ref mut figure) = self.current_figure {
             figure.translate(0,1);
         } else {
-            self.current_figure = Some(Figure::new(4, 0, (self.generator)()));
+            self.current_figure = Some(FigureState::new(4, 0, (self.generator)()));
         }
     }
 }

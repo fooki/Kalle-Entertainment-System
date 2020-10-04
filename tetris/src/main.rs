@@ -4,6 +4,7 @@ mod button_group;
 mod main_menu;
 mod tetris_game;
 mod tetris_block;
+mod figure_state;
 mod figure;
 mod board;
 
