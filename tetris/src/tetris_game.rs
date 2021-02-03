@@ -27,15 +27,15 @@ impl TetrisGame {
                 .scale(Scale::uniform(40.0))
         );
 
-        let mut board = Board::new(|| TetrisBlock::T);
+        // This will only provide T blocks, the generator needs to randomize
+        // blocks.
+        let board = Board::new(|| TetrisBlock::T);
 
         TetrisGame {
             text, board, tick_count: 0, inverted_speed: 60
         }
     }
-}
 
-impl TetrisGame {
     fn draw_board(&mut self, ctx: &mut Context) -> GameResult<()> {
         let color = [0.1, 0.1, 0.1, 1.0].into();
         let (center_x, center_y) = center(ctx);
